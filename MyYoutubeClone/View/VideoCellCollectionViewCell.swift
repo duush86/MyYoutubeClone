@@ -44,7 +44,7 @@ class VideoCellCollectionViewCell: BaseCell {
             
             titleLabel.text = video?.title
             
-            
+            //video?.thumbnailImage = 
             //cacheThumbnail(forVideo: video)
             thumbnailImageView.image = video?.thumbnailImage ?? UIImage(named: "bc")
             
@@ -64,8 +64,6 @@ class VideoCellCollectionViewCell: BaseCell {
             let subtitleText = "Channel: \(channelName) - Created at: \(createDateString(from: creation_date))"
             
             userProfileImageView.image = UIImage(named: channelName)
-            
-            
             
             
             subtitleTextView.text = subtitleText

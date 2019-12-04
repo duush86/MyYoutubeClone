@@ -103,13 +103,9 @@ class HomeController: BaseVideoViewController, UICollectionViewDelegateFlowLayou
     }()
     
     private func getVideosFromPlaylist(playlist: String) {
-        
-                
                       
         let queryParams = ["limit": 100, "offset": 0]
-                        
-                        // Retrieve a playlist through the BCOVPlaybackService
-        
+                                
         let playbackServiceRequestFactory = BCOVPlaybackServiceRequestFactory(accountId: ConfigConstants.AccountID, policyKey: ConfigConstants.PolicyKey)
                         
         
@@ -193,86 +189,83 @@ class HomeController: BaseVideoViewController, UICollectionViewDelegateFlowLayou
                                 
                 v.thumbnailImageName = video.properties[kBCOVVideoPropertyKeyPoster] as? String
                 
-                cacheThumbnail(forVideo: video)
-                
                 v.bcovId = video.properties[kBCOVVideoPropertyKeyId] as? String
-                
-               // print(channels)
-                
+                                
                 v.channel = channels[v.bcovId!]
-                
-                //print(dates)
-                
+                                
                 v.uploadDate = dates[v.bcovId!]
                 
                 return v
                 
             }()
-           // print(video.properties[kBCOVVideoPropertyKeyName] as! String)
             
             videosToUse.append(myBCVideo)
             
-            
-            collectionView.reloadData()
-            
         }
         
-        //collectionView.reloadData()
+        DispatchQueue.main.async {
+            
+            self.collectionView.reloadData()
+
+        }
 
         
     }
     
-    private func cacheThumbnail(forVideo video: BCOVVideo){
+   let imageCache = NSCache<AnyObject, AnyObject>()
+    
+    private func cacheThumbnail(forThumbnailURL thumbnailURLString: NSString){
         
         // Async task to get and store thumbnails
-        DispatchQueue.global(qos: .default).async {
-            
-            // videoID is the key in the image cache dictionary
-            guard let videoId = video.properties[kBCOVPlaylistPropertiesKeyId] as? String, let thumbnailSources = video.properties[kBCOVVideoPropertyKeyPosterSources] as? [[String:Any]] else {
-                
+
+        guard  let thumbnailURL = URL(string: thumbnailURLString as String) else {
+
+                return
+
+            }
+
+            if let imageFromCache = imageCache.object(forKey: thumbnailURLString)  {
+
+                imageCacheDictionary![thumbnailURLString  as String] = imageFromCache as? UIImage
+
+                print("cache image")
+
                 return
             }
-            
-            for thumbnailDictionary in thumbnailSources {
-                
-                guard let thumbnailURLString = thumbnailDictionary["src"] as? String, let thumbnailURL = URL(string: thumbnailURLString) else {
-                    
+
+            let session = URLSession(configuration: .default)
+
+            let task = session.dataTask(with: thumbnailURL) { (data, response, error) in
+
+                if error != nil {
+
+                    print(error as! Error)
+
                     return
-                    
+
                 }
-                
-                if thumbnailURL.scheme?.caseInsensitiveCompare("https") == .orderedSame {
-                    var thumbnailImageData: Data?
+
+                DispatchQueue.main.async {
+
+
+                    let imageCache = UIImage(data: data!)
                     
-                    do {
-                        
-                        thumbnailImageData = try Data(contentsOf: thumbnailURL)
-                        
-                    } catch let error {
-                        
-                        print("Error getting thumbnail image data: \(error.localizedDescription)")
-                        
-                    }
-                    
-                    guard let _thumbnailImageData = thumbnailImageData, let thumnailImage = UIImage(data: _thumbnailImageData) else {
-                        
-                        return
-                    }
-                    
-                    DispatchQueue.main.async {
-                        
-                        self.imageCacheDictionary?[videoId] = thumnailImage
-                        
-                        self.collectionView.reloadData()
-                                                
-                    }
-                    
-                    
+                    self.imageCache.setObject(imageCache!, forKey: thumbnailURLString)
+
+                    print("Loading image")
+
+                    self.imageCacheDictionary?[thumbnailURLString as String] = imageCache
+
+                    self.collectionView.reloadData()
+
                 }
-                
+
+
             }
-            
-        }
+
+            task.resume()
+        
+       
         
     }
     
@@ -328,12 +321,12 @@ class HomeController: BaseVideoViewController, UICollectionViewDelegateFlowLayou
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cellid", for: indexPath) as! VideoCellCollectionViewCell
-        
-        //cell.thumbnailImageView = video[indexPath.item].
-       
+               
         cell.video = videosToUse[indexPath.item]
         
-        cell.video?.thumbnailImage = imageCacheDictionary![cell.video!.bcovId!]
+        cacheThumbnail(forThumbnailURL: videosToUse[indexPath.item].thumbnailImageName! as NSString)
+        
+        cell.video?.thumbnailImage = imageCacheDictionary![(cell.video?.thumbnailImageName! as! NSString) as String]
         
         return cell
         
