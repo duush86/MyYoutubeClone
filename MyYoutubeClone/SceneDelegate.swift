@@ -8,17 +8,52 @@
 
 import UIKit
 
+
+
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
 
-
+    
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
-        guard let _ = (scene as? UIWindowScene) else { return }
+        
+        guard let windowScene = (scene as? UIWindowScene) else { return }
+        
+        self.window = UIWindow(windowScene: windowScene)
+        
+        let layout = UICollectionViewFlowLayout()
+        
+        self.window?.rootViewController = UINavigationController(rootViewController: HomeController(collectionViewLayout: layout))
+        
+        UINavigationBar.appearance().barTintColor =  UIColor.rgb(red: 230, green: 32, blue: 31)
+        
+        
+        //get ride of the weird line 
+        UINavigationBar.appearance().shadowImage = UIImage()
+        
+        UINavigationBar.appearance().setBackgroundImage(UIImage(), for: .default)
+        
+        
+        
+        self.window?.makeKeyAndVisible()
+        
+        let statusBarBackgroundView = UIView()
+        
+        statusBarBackgroundView.backgroundColor = UIColor.rgb(red: 194, green: 31, blue: 31)
+        
+        self.window?.addSubview(statusBarBackgroundView)
+        
+        self.window?.addConstraintsWithFormat(format: "H:|[v0]|", views: statusBarBackgroundView)
+        
+        self.window?.addConstraintsWithFormat(format: "V:|[v0(20)]", views: statusBarBackgroundView)
+        
     }
+
+  
+
 
     func sceneDidDisconnect(_ scene: UIScene) {
         // Called as the scene is being released by the system.
