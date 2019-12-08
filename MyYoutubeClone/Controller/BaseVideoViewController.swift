@@ -35,7 +35,7 @@ class BaseVideoViewController: UICollectionViewController,  BCOVPlaybackControll
     }
     
     func createNewPlaybackController(onView videoContainerView: UIView) -> BCOVPlaybackController? {
-         let playerView: BCOVPUIPlayerView? = {
+        let playerView: BCOVPUIPlayerView? = {
             
             let options = BCOVPUIPlayerViewOptions()
             options.presentingViewController = self
@@ -73,7 +73,7 @@ class BaseVideoViewController: UICollectionViewController,  BCOVPlaybackControll
         let options = BCOVBasicSessionProviderOptions()
         options.sourceSelectionPolicy = BCOVBasicSourceSelectionPolicy.sourceSelectionHLS(withScheme: kBCOVSourceURLSchemeHTTPS)
         //guard let basicSessionProvider = sdkManager?.createBasicSessionProvider(with: options), let authProxy = self.authProxy else {
-       //     return
+        //     return
         //}
         //let fairPlaySessionProvider = sdkManager?.createFairPlaySessionProvider(withApplicationCertificate: nil, authorizationProxy: authProxy, upstreamSessionProvider: basicSessionProvider)
         
@@ -94,7 +94,7 @@ class BaseVideoViewController: UICollectionViewController,  BCOVPlaybackControll
         
         return playbackController!
     }
-
+    
 }
 
 extension BaseVideoViewController: BCOVPUIPlayerViewDelegate {
@@ -131,8 +131,8 @@ extension BaseVideoViewController: BCOVPUIPlayerViewDelegate {
         default:
             print("Do Nothing")
         }
-
-
+        
+        
     }
     
 }

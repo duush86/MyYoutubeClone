@@ -42,3 +42,114 @@ extension UIView {
     }
     
 }
+
+extension Date {
+
+    func timeAgoSinceDate() -> String {
+
+        // From Time
+        let fromDate = self
+
+        // To Time
+        let toDate = Date()
+
+        // Estimation
+        // Year
+        if let interval = Calendar.current.dateComponents([.year], from: fromDate, to: toDate).year, interval > 0  {
+
+            return interval == 1 ? "\(interval)" + " " + "year ago" : "\(interval)" + " " + "years ago"
+        }
+
+        // Month
+        if let interval = Calendar.current.dateComponents([.month], from: fromDate, to: toDate).month, interval > 0  {
+
+            return interval == 1 ? "\(interval)" + " " + "month ago" : "\(interval)" + " " + "months ago"
+        }
+
+        // Day
+        if let interval = Calendar.current.dateComponents([.day], from: fromDate, to: toDate).day, interval > 0  {
+
+            return interval == 1 ? "\(interval)" + " " + "day ago" : "\(interval)" + " " + "days ago"
+        }
+
+        // Hours
+        if let interval = Calendar.current.dateComponents([.hour], from: fromDate, to: toDate).hour, interval > 0 {
+
+            return interval == 1 ? "\(interval)" + " " + "hour ago" : "\(interval)" + " " + "hours ago"
+        }
+
+        // Minute
+        if let interval = Calendar.current.dateComponents([.minute], from: fromDate, to: toDate).minute, interval > 0 {
+
+            return interval == 1 ? "\(interval)" + " " + "minute ago" : "\(interval)" + " " + "minutes ago"
+        }
+
+        return "a moment ago"
+    }
+}
+
+let imageCache = NSCache<AnyObject, AnyObject>()
+
+class CustomImageView: UIImageView {
+    
+     var imageURLString : NSString?
+    
+     func cacheThumbnail(forThumbnailURL thumbnailURLString: NSString){
+                
+        guard  let thumbnailURL = URL(string: thumbnailURLString as String) else {
+            
+            return
+            
+        }
+     
+        imageURLString = thumbnailURLString
+        
+        image = UIImage(named: "load")
+        
+        if let imageFromCache = imageCache.object(forKey: thumbnailURLString)  {
+                    
+           self.image = imageFromCache as? UIImage
+           
+            print("cache image")
+            
+            return
+        }
+        
+        let session = URLSession(configuration: .default)
+        
+        let task = session.dataTask(with: thumbnailURL) { (data, response, error) in
+            
+            if error != nil {
+                
+                print(error as! Error)
+                
+                return
+                
+            }
+            
+            DispatchQueue.main.async {
+                
+                let imageToCache = UIImage(data: data!)
+                
+                if self.imageURLString == thumbnailURLString {
+                
+                    self.image = imageToCache
+
+                }
+                print("Loading image")
+                
+               imageCache.setObject(imageToCache!, forKey: thumbnailURLString)
+
+                
+            }
+            
+            
+        }
+        
+        task.resume()
+        
+        
+        
+    }
+    
+}

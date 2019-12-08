@@ -105,9 +105,7 @@ class MenuCell: BaseCell {
     let imageView: UIImageView = {
        
         let iv = UIImageView()
-        
-       // iv.tintColor = UIColor.rgb(red: 91, green: 14, blue: 13)
-        
+                
         return iv
         
     }()

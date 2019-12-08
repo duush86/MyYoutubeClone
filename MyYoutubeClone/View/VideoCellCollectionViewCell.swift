@@ -16,6 +16,7 @@ class BaseCell: UICollectionViewCell {
         super.init(frame: frame)
         
         setupViews()
+        
     }
     
     func setupViews(){
@@ -31,65 +32,57 @@ class BaseCell: UICollectionViewCell {
 
 class VideoCellCollectionViewCell: BaseCell {
     
+    
     override init(frame: CGRect) {
+        
         super.init(frame: frame)
+                
         setupViews()
     }
-    
-//    var imageCacheDictionary: [String: UIImage]?
-    
+        
     var video: Video? {
         
         didSet {
             
-            titleLabel.text = video?.title
+            fetchAnalyticsData()
             
-            //video?.thumbnailImage = 
-            //cacheThumbnail(forVideo: video)
-            thumbnailImageView.image = video?.thumbnailImage ?? UIImage(named: "bc")
-            
+            fetchImage()
+                        
             thumbnailImageView.contentMode = .scaleToFill
             
-            
-            guard let channelName = video?.channel?.name, let creation_date = video?.uploadDate else {
-                
+          //guard let channelName = video?.channel?.name, let creation_date = video?.uploadDate else {
+          guard let channelName = video?.channel?.name, let creation_date = video?.uploadDate, let nov = video?.numberOfViews else {
+
                 print("Cannot get details on videos or channel")
                 
+                let subtitleText = ""
+                
+                subtitleTextView.text = subtitleText
+                
+                userProfileImageView.image = nil
+                
+                titleLabel.text = ""
+            
                 return
             }
             
+            titleLabel.text = video?.title
             
+            let numberFormatter = NumberFormatter()
             
+            numberFormatter.numberStyle = .decimal
+
+           
             
-            let subtitleText = "Channel: \(channelName) - Created at: \(createDateString(from: creation_date))"
-            
+            let subtitleText = "\(channelName) - \(numberFormatter.string(from: nov)!) views - Since \(createDateString(from: creation_date))"
+            //let subtitleText = "\(channelName) - X views - Since \(createDateString(from: creation_date))"
+
             userProfileImageView.image = UIImage(named: channelName)
             
             
             subtitleTextView.text = subtitleText
-            //imageCacheDictionary[video?.bcovId] =
-            
-//            guard let channelImage = video?.channel?.profileImageName,
-//                  let channelName = video?.channel?.name,
-//                  let numberOfViews = video?.numberOfViews else {
-//                
-//                print("Cannot get details for video and or channel")
-//                
-//                return
-//                
-//            }
-//            
-//            let numberFormatter = NumberFormatter()
-//            
-//            numberFormatter.numberStyle = .decimal
-//
-//            userProfileImageView.image = UIImage(named: channelImage)
-//            
-//            let subtitleText = "\(channelName) - \(numberFormatter.string(from: numberOfViews)!) -  2 years ago"
-//            
-//            subtitleTextView.text = subtitleText
-//            
-            
+    
+    
             //measure title text
             guard let title = video?.title else {
             
@@ -98,6 +91,7 @@ class VideoCellCollectionViewCell: BaseCell {
                 return
             
             }
+            
             let estimatedRect = NSString(string: title).boundingRect(with: CGSize(width: frame.width - 16 - 44 - 8 - 16, height: 1000), options: NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin), attributes: [kCTFontAttributeName as NSAttributedString.Key: UIFont.systemFont(ofSize: 14)], context: nil)
             
             if estimatedRect.size.height > 20 {
@@ -117,6 +111,79 @@ class VideoCellCollectionViewCell: BaseCell {
         
     }
     
+    func fetchImage(){
+        
+        if let thumbnailImageURL = video?.thumbnailImageName {
+            
+            thumbnailImageView.cacheThumbnail(forThumbnailURL: thumbnailImageURL as NSString)
+        
+        }
+        
+    }
+    
+    
+    func fetchAnalyticsData(){
+            
+        video?.fetchAnalytics()
+        
+    }
+
+
+    
+// let imageCache = NSCache<AnyObject, AnyObject>()
+//
+// private func cacheThumbnail(forThumbnailURL thumbnailURLString: NSString){
+//
+//     // Async task to get and store thumbnails
+//
+//     guard  let thumbnailURL = URL(string: thumbnailURLString as String) else {
+//
+//         return
+//
+//     }
+//
+//     if let imageFromCache = imageCache.object(forKey: thumbnailURLString)  {
+//
+//        thumbnailImageView.image = imageFromCache as? UIImage
+//
+//         print("cache image")
+//
+//         return
+//     }
+//
+//     let session = URLSession(configuration: .default)
+//
+//     let task = session.dataTask(with: thumbnailURL) { (data, response, error) in
+//
+//         if error != nil {
+//
+//             print(error as! Error)
+//
+//             return
+//
+//         }
+//
+//         DispatchQueue.main.async {
+//
+//             let imageCache = UIImage(data: data!)
+//
+//             self.imageCache.setObject(imageCache!, forKey: thumbnailURLString)
+//
+//             print("Loading image")
+//
+//             self.thumbnailImageView.image = imageCache
+//
+//         }
+//
+//
+//     }
+//
+//     task.resume()
+//
+//
+//
+// }
+    
     func createDateString(from dateString: String) -> String {
        
          let dateFormatter = DateFormatter()
@@ -130,22 +197,14 @@ class VideoCellCollectionViewCell: BaseCell {
          dateFormatter.calendar = Calendar(identifier: .gregorian)
         
          let date = dateFormatter.date(from: dateString)
-         
-         let stringFormatter = DateFormatter()
-                     
-         stringFormatter.dateStyle = .medium
-         
-         return stringFormatter.string(from: date!)
+        
+        return date!.timeAgoSinceDate()
         
     }
     
-    let thumbnailImageView: UIImageView = {
+    let thumbnailImageView: CustomImageView = {
         
-        let imageView = UIImageView()
-                
-        //imageView.image = UIImage(named: "miss_atomic")
-        
-        //imageView.contentMode = .scaleAspectFill
+        let imageView = CustomImageView()
         
         imageView.clipsToBounds = true
                 
@@ -166,10 +225,8 @@ class VideoCellCollectionViewCell: BaseCell {
     let userProfileImageView : UIImageView = {
         
         let imageView = UIImageView()
-               
-       // imageView.backgroundColor = UIColor.green
-        
-        imageView.image = UIImage(named: "k_icon")
+                       
+        //imageView.image = UIImage(named: "k_icon")
         
         imageView.layer.cornerRadius = 22
         
@@ -183,12 +240,10 @@ class VideoCellCollectionViewCell: BaseCell {
     let titleLabel: UILabel = {
         
         let label = UILabel()
-        
-        //label.backgroundColor = UIColor.purple
-        
+                
         label.translatesAutoresizingMaskIntoConstraints = false
         
-        label.text = "The Killers - Mr. Brightside"
+       // label.text = "The Killers - Mr. Brightside"
         
         label.numberOfLines = 0
         
@@ -200,7 +255,7 @@ class VideoCellCollectionViewCell: BaseCell {
         
         let textView = UITextView()
                 
-        textView.text = "The KillersVEVO - 6,344,3432 views - 6 years"
+        textView.text = ""
         
         textView.isEditable = false
         

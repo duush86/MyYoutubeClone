@@ -19,6 +19,8 @@
 		94C90940239561B20030B30A /* MenuBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C9093F239561B20030B30A /* MenuBar.swift */; };
 		94C909422395B05B0030B30A /* Video.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C909412395B05B0030B30A /* Video.swift */; };
 		94C909442395C4FC0030B30A /* BaseVideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C909432395C4FC0030B30A /* BaseVideoViewController.swift */; };
+		94C909462398629E0030B30A /* SettingsLauncher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C909452398629E0030B30A /* SettingsLauncher.swift */; };
+		94C90948239992A10030B30A /* SettingsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C90947239992A10030B30A /* SettingsCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,6 +39,8 @@
 		94C9093F239561B20030B30A /* MenuBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBar.swift; sourceTree = "<group>"; };
 		94C909412395B05B0030B30A /* Video.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Video.swift; sourceTree = "<group>"; };
 		94C909432395C4FC0030B30A /* BaseVideoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseVideoViewController.swift; sourceTree = "<group>"; };
+		94C909452398629E0030B30A /* SettingsLauncher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsLauncher.swift; sourceTree = "<group>"; };
+		94C90947239992A10030B30A /* SettingsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsCell.swift; sourceTree = "<group>"; };
 		E21317CBEF04E283EB4C1D96 /* Pods-MyYoutubeClone.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MyYoutubeClone.debug.xcconfig"; path = "Target Support Files/Pods-MyYoutubeClone/Pods-MyYoutubeClone.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -116,6 +120,7 @@
 			isa = PBXGroup;
 			children = (
 				94C909372391BAAB0030B30A /* VideoCellCollectionViewCell.swift */,
+				94C90947239992A10030B30A /* SettingsCell.swift */,
 				94C9093F239561B20030B30A /* MenuBar.swift */,
 			);
 			path = View;
@@ -125,6 +130,7 @@
 			isa = PBXGroup;
 			children = (
 				94C909072390583E0030B30A /* HomeController.swift */,
+				94C909452398629E0030B30A /* SettingsLauncher.swift */,
 				94C909432395C4FC0030B30A /* BaseVideoViewController.swift */,
 			);
 			path = Controller;
@@ -272,8 +278,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				94C9093B23943DDC0030B30A /* Extensions.swift in Sources */,
+				94C909462398629E0030B30A /* SettingsLauncher.swift in Sources */,
 				94C909442395C4FC0030B30A /* BaseVideoViewController.swift in Sources */,
 				94C909082390583E0030B30A /* HomeController.swift in Sources */,
+				94C90948239992A10030B30A /* SettingsCell.swift in Sources */,
 				94C90940239561B20030B30A /* MenuBar.swift in Sources */,
 				94C909042390583E0030B30A /* AppDelegate.swift in Sources */,
 				94C909382391BAAB0030B30A /* VideoCellCollectionViewCell.swift in Sources */,

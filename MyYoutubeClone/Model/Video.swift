@@ -9,7 +9,15 @@
 import UIKit
 import BrightcovePlayerSDK
 
+protocol ReloadDelegate {
+    
+    func didUpdateAnalytics(forVideo video: Video)
+    
+}
+
 class Video: NSObject {
+    
+    var delegate: ReloadDelegate?
     
     var bcovId: String?
     
@@ -24,6 +32,82 @@ class Video: NSObject {
     var numberOfViews: NSNumber?
     
     var uploadDate: String?
+    
+    let analyticsCache = NSCache<AnyObject, AnyObject>()
+    
+    func fetchAnalytics(){
+                
+        let video = self
+        
+        if let analyticCache = analyticsCache.object(forKey: video.bcovId as! NSString)  {
+            
+            self.numberOfViews = analyticCache as? NSNumber
+            
+            print("Cache analytics")
+                        
+            return
+            
+        }
+        
+        let proxyURL = URL(string: "https://solutions.brightcove.com/aorozco/analytics_proxy.php")
+        
+        let json: [String: Any] = ["requestType": "GET",
+                                   "url": "https://analytics.api.brightcove.com/v1/alltime/accounts/6030890615001/videos/\(video.bcovId!)"]
+                
+        let jsonData = try? JSONSerialization.data(withJSONObject: json)
+        
+        var request = URLRequest(url: proxyURL!)
+        
+        request.httpMethod = "POST"
+        
+        request.httpBody = jsonData
+        
+        let session = URLSession(configuration: .default)
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            
+            if error != nil {
+                
+                print(error as! Error)
+                
+                return
+                
+            }
+            guard let dataResponse = data else {
+                
+                print("Issues getting the data")
+                
+                return
+            }
+            
+            DispatchQueue.main.async {
+                
+                let responseJSON = try? JSONSerialization.jsonObject(with: dataResponse, options: [])
+                
+                if let responseJSON = responseJSON as? [String: Any] {
+                    
+                    let responseValue = responseJSON["alltime_video_views"]! as! NSNumber
+                    
+                    self.analyticsCache.setObject(responseValue, forKey: video.bcovId as! NSString)
+                    
+                    self.numberOfViews = responseValue
+                    
+                    print("Fetching analytics")
+                    
+                    self.delegate?.didUpdateAnalytics(forVideo: video)
+                    
+                    
+                }
+                
+           }
+            
+            
+        }
+        
+        task.resume()
+        
+        
+    }
 }
 
 class Channel: NSObject, Decodable {
