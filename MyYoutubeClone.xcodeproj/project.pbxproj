@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		07C492F775B574762E44764C /* Pods_MyYoutubeClone.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5346B579FBEF5CDFDCD74939 /* Pods_MyYoutubeClone.framework */; };
+		9443892D23A1A51400E5EFC9 /* FeedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9443892C23A1A51400E5EFC9 /* FeedCell.swift */; };
+		94A2DC3B23A04D0B0016B079 /* Brightcove-Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A2DC3A23A04D0B0016B079 /* Brightcove-Service.swift */; };
+		94B768B923A2D5110093AFB2 /* TrendingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B768B823A2D5110093AFB2 /* TrendingCell.swift */; };
+		94B768BB23A2E4D60093AFB2 /* SubscriptionsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B768BA23A2E4D60093AFB2 /* SubscriptionsCell.swift */; };
 		94C909042390583E0030B30A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C909032390583E0030B30A /* AppDelegate.swift */; };
 		94C909062390583E0030B30A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C909052390583E0030B30A /* SceneDelegate.swift */; };
 		94C909082390583E0030B30A /* HomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C909072390583E0030B30A /* HomeController.swift */; };
@@ -26,6 +30,10 @@
 /* Begin PBXFileReference section */
 		419360A6739E9267F535C9DA /* Pods-MyYoutubeClone.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MyYoutubeClone.release.xcconfig"; path = "Target Support Files/Pods-MyYoutubeClone/Pods-MyYoutubeClone.release.xcconfig"; sourceTree = "<group>"; };
 		5346B579FBEF5CDFDCD74939 /* Pods_MyYoutubeClone.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MyYoutubeClone.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9443892C23A1A51400E5EFC9 /* FeedCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedCell.swift; sourceTree = "<group>"; };
+		94A2DC3A23A04D0B0016B079 /* Brightcove-Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Brightcove-Service.swift"; sourceTree = "<group>"; };
+		94B768B823A2D5110093AFB2 /* TrendingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrendingCell.swift; sourceTree = "<group>"; };
+		94B768BA23A2E4D60093AFB2 /* SubscriptionsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionsCell.swift; sourceTree = "<group>"; };
 		94C909002390583E0030B30A /* MyYoutubeClone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyYoutubeClone.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		94C909032390583E0030B30A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		94C909052390583E0030B30A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -112,6 +120,7 @@
 			isa = PBXGroup;
 			children = (
 				94C9093A23943DDC0030B30A /* Extensions.swift */,
+				94A2DC3A23A04D0B0016B079 /* Brightcove-Service.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -122,6 +131,9 @@
 				94C909372391BAAB0030B30A /* VideoCellCollectionViewCell.swift */,
 				94C90947239992A10030B30A /* SettingsCell.swift */,
 				94C9093F239561B20030B30A /* MenuBar.swift */,
+				9443892C23A1A51400E5EFC9 /* FeedCell.swift */,
+				94B768B823A2D5110093AFB2 /* TrendingCell.swift */,
+				94B768BA23A2E4D60093AFB2 /* SubscriptionsCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -281,11 +293,15 @@
 				94C909462398629E0030B30A /* SettingsLauncher.swift in Sources */,
 				94C909442395C4FC0030B30A /* BaseVideoViewController.swift in Sources */,
 				94C909082390583E0030B30A /* HomeController.swift in Sources */,
+				94B768BB23A2E4D60093AFB2 /* SubscriptionsCell.swift in Sources */,
 				94C90948239992A10030B30A /* SettingsCell.swift in Sources */,
+				9443892D23A1A51400E5EFC9 /* FeedCell.swift in Sources */,
+				94A2DC3B23A04D0B0016B079 /* Brightcove-Service.swift in Sources */,
 				94C90940239561B20030B30A /* MenuBar.swift in Sources */,
 				94C909042390583E0030B30A /* AppDelegate.swift in Sources */,
 				94C909382391BAAB0030B30A /* VideoCellCollectionViewCell.swift in Sources */,
 				94C909422395B05B0030B30A /* Video.swift in Sources */,
+				94B768B923A2D5110093AFB2 /* TrendingCell.swift in Sources */,
 				94C909062390583E0030B30A /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

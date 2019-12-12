@@ -28,6 +28,8 @@ class MenuBar: UIView {
     
     let cellId = "cellId"
     
+    var homeController: HomeController?
+    
     let imageNames = ["home", "trending", "subscriptions", "account"]
     
     override init(frame: CGRect) {
@@ -46,7 +48,41 @@ class MenuBar: UIView {
         
         collectionView.selectItem(at: selectedIndexPath, animated: false, scrollPosition: .top)
         
+        setupHorizontalBar()
+        
     }
+    
+    var horizontalBarLeftAnchoConstraint: NSLayoutConstraint?
+    
+    func setupHorizontalBar(){
+        
+        let horizontalBarView = UIView()
+        
+        horizontalBarView.backgroundColor = UIColor(white: 0.95, alpha: 1)
+        
+        horizontalBarView.translatesAutoresizingMaskIntoConstraints = false
+        
+        addSubview(horizontalBarView)
+        
+        horizontalBarLeftAnchoConstraint = horizontalBarView.leftAnchor.constraint(equalTo: self.leftAnchor)
+        
+        horizontalBarLeftAnchoConstraint!.isActive = true
+        
+        let horizontalBarBottomAnchoConstraint = horizontalBarView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
+        
+        horizontalBarBottomAnchoConstraint.isActive = true
+        
+        let horizontalBarWidthAnchoConstraint = horizontalBarView.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 1/4)
+        
+        horizontalBarWidthAnchoConstraint.isActive = true
+        
+        let horizontalBarHeightAnchoConstraint = horizontalBarView.heightAnchor.constraint(equalToConstant: 3)
+        
+        horizontalBarHeightAnchoConstraint.isActive = true
+        
+    }
+    
+   
     
     required init?(coder: NSCoder) {
         
@@ -65,9 +101,7 @@ extension  MenuBar: UICollectionViewDataSource{
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! MenuCell
-        
-        //cell.backgroundColor = UIColor.black
-        
+                
         cell.imageView.image = UIImage(named: imageNames[indexPath.item])?.withRenderingMode(.alwaysTemplate)
                 
         cell.tintColor = UIColor.rgb(red: 91, green: 14, blue: 13)
@@ -97,6 +131,17 @@ extension MenuBar: UICollectionViewDelegateFlowLayout {
         return 0
     
     }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+                   
+        let x = CGFloat(indexPath.item) * self.frame.width / 4
+
+        horizontalBarLeftAnchoConstraint!.constant = x
+        
+        homeController?.scrollToManuIndex(menuIndex: indexPath.item)
+    }
+        
+    
     
 }
 

@@ -26,7 +26,7 @@ class Video: NSObject {
     var thumbnailImageName: String?
     
     var thumbnailImage: UIImage?
-        
+    
     var channel: Channel?
     
     var numberOfViews: NSNumber?
@@ -36,7 +36,7 @@ class Video: NSObject {
     let analyticsCache = NSCache<AnyObject, AnyObject>()
     
     func fetchAnalytics(){
-                
+        
         let video = self
         
         if let analyticCache = analyticsCache.object(forKey: video.bcovId as! NSString)  {
@@ -44,7 +44,7 @@ class Video: NSObject {
             self.numberOfViews = analyticCache as? NSNumber
             
             print("Cache analytics")
-                        
+            
             return
             
         }
@@ -53,7 +53,7 @@ class Video: NSObject {
         
         let json: [String: Any] = ["requestType": "GET",
                                    "url": "https://analytics.api.brightcove.com/v1/alltime/accounts/6030890615001/videos/\(video.bcovId!)"]
-                
+        
         let jsonData = try? JSONSerialization.data(withJSONObject: json)
         
         var request = URLRequest(url: proxyURL!)
@@ -80,26 +80,24 @@ class Video: NSObject {
                 return
             }
             
-            DispatchQueue.main.async {
+            
+            let responseJSON = try? JSONSerialization.jsonObject(with: dataResponse, options: [])
+            
+            if let responseJSON = responseJSON as? [String: Any] {
                 
-                let responseJSON = try? JSONSerialization.jsonObject(with: dataResponse, options: [])
+                let responseValue = responseJSON["alltime_video_views"]! as! NSNumber
                 
-                if let responseJSON = responseJSON as? [String: Any] {
-                    
-                    let responseValue = responseJSON["alltime_video_views"]! as! NSNumber
-                    
-                    self.analyticsCache.setObject(responseValue, forKey: video.bcovId as! NSString)
-                    
-                    self.numberOfViews = responseValue
-                    
-                    print("Fetching analytics")
-                    
-                    self.delegate?.didUpdateAnalytics(forVideo: video)
-                    
-                    
-                }
+                self.analyticsCache.setObject(responseValue, forKey: video.bcovId as! NSString)
                 
-           }
+                self.numberOfViews = responseValue
+                
+                print("Fetching analytics")
+                
+                self.delegate?.didUpdateAnalytics(forVideo: video)
+                
+            }
+            
+            
             
             
         }

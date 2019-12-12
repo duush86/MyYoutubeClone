@@ -110,7 +110,7 @@ class CustomImageView: UIImageView {
                     
            self.image = imageFromCache as? UIImage
            
-            print("cache image")
+            //print("cache image")
             
             return
         }
@@ -127,18 +127,20 @@ class CustomImageView: UIImageView {
                 
             }
             
-            DispatchQueue.main.async {
+           DispatchQueue.main.async {
                 
                 let imageToCache = UIImage(data: data!)
                 
                 if self.imageURLString == thumbnailURLString {
                 
-                    self.image = imageToCache
+                self.image = imageToCache
+                    
+                //print("Loading image")
+                                 
+                imageCache.setObject(imageToCache!, forKey: thumbnailURLString)
 
-                }
-                print("Loading image")
-                
-               imageCache.setObject(imageToCache!, forKey: thumbnailURLString)
+        }
+             
 
                 
             }

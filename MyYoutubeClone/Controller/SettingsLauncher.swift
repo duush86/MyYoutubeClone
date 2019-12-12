@@ -12,17 +12,29 @@ import UIKit
 
 class Setting: NSObject {
     
-    let name: String
+    let name: SettingName
     
     let imageName: String
     
-    init(name: String, imageName: String) {
+    init(name: SettingName, imageName: String) {
         
         self.name = name
         
         self.imageName = imageName
         
     }
+}
+
+enum SettingName: String {
+    
+    case Cancel = "Cancel and Dismiss"
+    case Settings = "Settings"
+    case TermsAndConditions = "Terms and Conditions"
+    case SendFeedback = "SendFeedback"
+    case Help = "Help"
+    case SwitchAccount = "Switch Account"
+    
+    
 }
 
 class SettingsLauncher: NSObject {
@@ -46,12 +58,14 @@ class SettingsLauncher: NSObject {
     
     let settings: [Setting] = {
         
-        return  [Setting(name: "Settings", imageName: "settings"),
-                 Setting(name: "Terms and Conditions", imageName: "lock"),
-                 Setting(name: "Send Feedback", imageName: "feedback"),
-                 Setting(name: "Help", imageName: "help"),
-                 Setting(name: "Switch Account", imageName: "s_account"),
-                 Setting(name: "Cancel", imageName: "cancel")]
+        let cancelSetting = Setting(name: .Cancel, imageName: "Cancel")
+        
+        return  [Setting(name: .Settings, imageName: "settings"),
+                 Setting(name: .TermsAndConditions, imageName: "lock"),
+                 Setting(name: .SendFeedback, imageName: "feedback"),
+                 Setting(name: .Help, imageName: "help"),
+                 Setting(name: .SwitchAccount, imageName: "s_account"),
+                 Setting(name: .Cancel, imageName: "cancel")]
     }()
     
     var homeController: HomeController?
@@ -163,7 +177,7 @@ extension SettingsLauncher: UICollectionViewDelegate {
             
             let setting = self.settings[indexPath.item]
 
-            if setting.name != "Cancel" {
+          if  setting.name != .Cancel {
                 
                 self.homeController?.showControllerForSetting(setting: setting)
                 

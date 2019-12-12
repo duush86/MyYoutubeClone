@@ -128,61 +128,6 @@ class VideoCellCollectionViewCell: BaseCell {
         
     }
 
-
-    
-// let imageCache = NSCache<AnyObject, AnyObject>()
-//
-// private func cacheThumbnail(forThumbnailURL thumbnailURLString: NSString){
-//
-//     // Async task to get and store thumbnails
-//
-//     guard  let thumbnailURL = URL(string: thumbnailURLString as String) else {
-//
-//         return
-//
-//     }
-//
-//     if let imageFromCache = imageCache.object(forKey: thumbnailURLString)  {
-//
-//        thumbnailImageView.image = imageFromCache as? UIImage
-//
-//         print("cache image")
-//
-//         return
-//     }
-//
-//     let session = URLSession(configuration: .default)
-//
-//     let task = session.dataTask(with: thumbnailURL) { (data, response, error) in
-//
-//         if error != nil {
-//
-//             print(error as! Error)
-//
-//             return
-//
-//         }
-//
-//         DispatchQueue.main.async {
-//
-//             let imageCache = UIImage(data: data!)
-//
-//             self.imageCache.setObject(imageCache!, forKey: thumbnailURLString)
-//
-//             print("Loading image")
-//
-//             self.thumbnailImageView.image = imageCache
-//
-//         }
-//
-//
-//     }
-//
-//     task.resume()
-//
-//
-//
-// }
     
     func createDateString(from dateString: String) -> String {
        

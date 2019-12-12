@@ -17,34 +17,10 @@ struct ConfigConstants {
     static let latestPL = "1651847405034787885"
 }
 
-class HomeController: BaseVideoViewController, UICollectionViewDelegateFlowLayout, ReloadDelegate {
-   
-    func didUpdateAnalytics(forVideo video: Video) {
+class HomeController: BaseVideoViewController {
     
-        //print("\(video.bcovId) - My Analytics are ready: \(video.numberOfViews) ")
-        
-        let indexOfItem = videosToUse.firstIndex(of: video)
-        
-        //print(indexOfItem)
-        
-        let item: IndexPath = IndexPath(item: indexOfItem!, section: 0)
-        
-        DispatchQueue.main.async {
-            
-            self.collectionView.reloadItems(at: [item])
-            
-        }
+    let titles = ["Home", "Trending", "Suscriptions","Account"]
 
-    
-    }
-    
-    var videosToUse: [Video] = []
-        
-    var channelsForVideosDictionary: [String : Channel]?
-    
-    var datesDictionary: [String: String]?
-    
-    
     override func viewDidLoad() {
         
         super.viewDidLoad()
@@ -53,7 +29,7 @@ class HomeController: BaseVideoViewController, UICollectionViewDelegateFlowLayou
         
         let titleLabel = UILabel(frame: CGRect(x: 0, y: 0, width: view.frame.width - 32, height: view.frame.height))
         
-        titleLabel.text = "Home"
+        titleLabel.text = "  Home"
         
         titleLabel.textColor = UIColor.white
         
@@ -63,153 +39,90 @@ class HomeController: BaseVideoViewController, UICollectionViewDelegateFlowLayou
         
         collectionView?.backgroundColor = UIColor.white
         
-        collectionView.register(VideoCellCollectionViewCell.self, forCellWithReuseIdentifier: "cellid")
+        let cellid: String = "cellid"
         
-        collectionView.contentInset = UIEdgeInsets(top: 50, left: 0, bottom: 0, right: 0)
+        let trendingcellid: String = "trendingcellid"
         
-        collectionView.scrollIndicatorInsets = UIEdgeInsets(top: 50, left: 0, bottom: 0, right: 0)
-                    
-        getVideosFromPlaylist(playlist: ConfigConstants.latestPL)
+        let subscriptioncellid: String = "subscriptioncellid"
+        
+        setupCollectionView()
         
         setupMenuBar()
         
         setupNavBarButtons()
         
+    }
+    
+    func setupCollectionView()  {
         
+        //collectionView.register(VideoCellCollectionViewCell.self, forCellWithReuseIdentifier: "cellid")
+        
+        if let flowLayout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
+            
+            flowLayout.scrollDirection = .horizontal
+            
+            flowLayout.minimumLineSpacing = 0
+        }
+       
+        collectionView.register(FeedCell.self, forCellWithReuseIdentifier: "cellid")
+        
+        collectionView.register(TrendingCell.self, forCellWithReuseIdentifier: "trendingcellid")
+        
+        collectionView.register(SubscriptionsCell.self, forCellWithReuseIdentifier: "subscriptioncellid")
+
+        collectionView.contentInset = UIEdgeInsets(top: 50, left: 0, bottom: 0, right: 0)
+        
+        collectionView.scrollIndicatorInsets = UIEdgeInsets(top: 50, left: 0, bottom: 0, right: 0)
+                    
+        collectionView.isPagingEnabled = true
     }
     
     
-    let menuBar: MenuBar = {
+    lazy var menuBar: MenuBar = {
         
         let mb = MenuBar()
+        
+        mb.homeController = self
         
         return mb
         
     }()
     
-    private func getVideosFromPlaylist(playlist: String) {
-        
-        let queryParams = ["limit": 100, "offset": 0]
-        
-        let playbackServiceRequestFactory = BCOVPlaybackServiceRequestFactory(accountId: ConfigConstants.AccountID, policyKey: ConfigConstants.PolicyKey)
-        
-        
-        let playbackService = BCOVPlaybackService(requestFactory: playbackServiceRequestFactory)
-        
-        
-        playbackService?.findPlaylist(withPlaylistID: playlist, parameters: queryParams, completion: { [weak self] (playlist: BCOVPlaylist?, jsonResponse: [AnyHashable:Any]?, error: Error?) in
-            
-            
-            if let playlist = playlist, let videos = playlist.videos as? [BCOVVideo] {
-                
-                print("We have some videos ")
-                
-                var index: Int = 0
-                
-                self!.channelsForVideosDictionary = [:]
-                
-                self!.datesDictionary = [:]
-                
-             //   self!.viewsDictionary = [:]
-                
-                for video in videos {
-                    
-                    if let arr = jsonResponse!["videos"] as! NSArray? {
-                        
-                        
-                        let dic = arr[index] as! NSDictionary
-                                                
-                        let cf = dic["custom_fields"] as! NSDictionary
-                        
-                        let channel = Channel()
-                        
-                        if cf["channel"] != nil {
-                            
-                            channel.name = cf.value(forKey: "channel") as? String
-                            
-                        } else {
-                            
-                            channel.name = "No channel"
-                            
-                        }
-                        
-                        let creationDate = dic["created_at"] as? String
-                                                
-                        self?.channelsForVideosDictionary?[video.properties[kBCOVPlaylistPropertiesKeyId] as! String] = channel
-                        
-                        self?.datesDictionary?[video.properties[kBCOVPlaylistPropertiesKeyId] as! String] = creationDate
-                        
-                        index += 1
-                    }
-                }
-                
-                
-                self?.usePlaylist(withVideos: videos,withChannels: self!.channelsForVideosDictionary!, withDates: self!.datesDictionary!)
-                
-                
-            }else {
-                
-                print("No videos for playlist")
-                
-            }
-            
-        })
-        
-    }
     
- 
-    
-    
-    private func usePlaylist(withVideos videos: [BCOVVideo], withChannels channels: [String : Channel], withDates dates: [String : String]){
-        
-        
-        for video in videos {
-            
-            let myBCVideo : Video = {
-                
-                let v = Video()
-                
-                v.title = video.properties[kBCOVVideoPropertyKeyName] as? String
-                
-                v.thumbnailImageName = video.properties[kBCOVVideoPropertyKeyPoster] as? String
-                
-                v.bcovId = video.properties[kBCOVVideoPropertyKeyId] as? String
-                
-                v.channel = channels[v.bcovId!]
-                
-                v.uploadDate = dates[v.bcovId!]
-                
-                v.delegate = self
-                                                                
-                return v
-                
-            }()
-            
-            videosToUse.append(myBCVideo)
-            
-        }
-        
-        DispatchQueue.main.async {
-
-           self.collectionView.reloadData()
-
-        }
-        
-        
-    }
+   
     
     private func setupMenuBar() {
         
+        navigationController?.hidesBarsOnSwipe = true
+        
+        let redView: UIView = {
+            
+            let view = UIView()
+            
+            view.backgroundColor = UIColor.rgb(red: 230, green: 30, blue: 31)
+            
+            return view
+            
+        }()
+        
+        view.addSubview(redView)
+        
         view.addSubview(menuBar)
+        
+        view.addConstraintsWithFormat(format: "H:|[v0]|", views: redView)
+        
+        view.addConstraintsWithFormat(format: "V:[v0(50)]", views: redView)
         
         view.addConstraintsWithFormat(format:"H:|[v0]|", views: menuBar)
         
-        view.addConstraintsWithFormat(format:"V:|[v0(50)]", views: menuBar)
+        view.addConstraintsWithFormat(format:"V:[v0(50)]", views: menuBar)
         
+        menuBar.topAnchor.constraint(equalTo:  view.safeAreaLayoutGuide.topAnchor).isActive = true
+       
     }
     
     private func setupNavBarButtons(){
-        
+                
         let searchImage = UIImage(named: "search")?.withRenderingMode(.alwaysOriginal)
         
         let moreImage = UIImage(named: "more")?.withRenderingMode(.alwaysOriginal)
@@ -247,7 +160,7 @@ class HomeController: BaseVideoViewController, UICollectionViewDelegateFlowLayou
                
         navigationController?.pushViewController(dummySettingsViewController, animated: true)
         
-        dummySettingsViewController.navigationItem.title = setting.name
+        dummySettingsViewController.navigationItem.title = setting.name.rawValue
         
         dummySettingsViewController.view.backgroundColor = UIColor.white
                 
@@ -269,7 +182,7 @@ class HomeController: BaseVideoViewController, UICollectionViewDelegateFlowLayou
     @objc func handleSearch() {
         
         print(123)
-        
+        //scrollToManuIndex(menuIndex: 2)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -277,38 +190,91 @@ class HomeController: BaseVideoViewController, UICollectionViewDelegateFlowLayou
         
     }
     
-    
-    
-    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return videosToUse.count
+    func scrollToManuIndex(menuIndex: Int) {
+        
+        let indexPath = NSIndexPath(item: menuIndex, section: 0)
+        
+        collectionView.scrollToItem(at: indexPath as IndexPath, at: .right, animated: true)
+        
+        updateTitle(forIndex: menuIndex)
+        
     }
     
+    func updateTitle(forIndex index: Int){
+        
+        if let titleLabel = navigationItem.titleView as? UILabel {
+            
+            titleLabel.text = "  \(titles[index])"
+            
+        }
+        
+    }
 
+}
+
+
+
+extension HomeController: UICollectionViewDelegateFlowLayout {
+    
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+                
+        menuBar.horizontalBarLeftAnchoConstraint?.constant = scrollView.contentOffset.x / 4
+        
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        
+        return 4
+        
+    }
+    
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cellid", for: indexPath) as! VideoCellCollectionViewCell
+        //var cell: UICollectionViewCell?
         
-        cell.video = videosToUse[indexPath.item]
+
+        if indexPath.item == 1 {
+            
+           return  collectionView.dequeueReusableCell(withReuseIdentifier: "trendingcellid", for: indexPath)
+
+        }
+        
+        if indexPath.item == 2 {
+            
+            print("menu2")
+                 
+                return  collectionView.dequeueReusableCell(withReuseIdentifier: "subscriptioncellid", for: indexPath)
+
+             }
+        
+        
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cellid", for: indexPath)
+
         
         return cell
         
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        
-        let height = (view.frame.width - 32) * 9 / 16
-        
-        return CGSize(width: view.frame.width, height: height + 16 + 80)
-        
-    }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        
-        return 0
-        
+        return CGSize(width: view.frame.width, height: view.frame.height - 50)
     }
     
     
+    override func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+       
+        let target = targetContentOffset.pointee.x / view.frame.width
+        
+        let targetIndex: NSIndexPath = NSIndexPath(item: Int(target), section: 0)
+        
+        menuBar.collectionView.selectItem(at: targetIndex as IndexPath, animated: true, scrollPosition: .top)
+       
+        updateTitle(forIndex: Int(target))
+        
+        
+    }
 
+    
 }
+
 
