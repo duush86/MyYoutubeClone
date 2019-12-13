@@ -11,16 +11,16 @@ import BrightcovePlayerSDK
 
 class FeedCell: BaseCell {
     
-    var videosToUse: [Video] = []
+    var videos: [Video] = []
     
     var channelsForVideosDictionary: [String : Channel]?
     
     var datesDictionary: [String: String]?
-
+    
     
     lazy var collectionView: UICollectionView = {
         
-       let layout = UICollectionViewFlowLayout()
+        let layout = UICollectionViewFlowLayout()
         
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
         
@@ -31,6 +31,7 @@ class FeedCell: BaseCell {
         cv.delegate = self
         
         return cv
+        
     }()
     
     let cellid = "cellid"
@@ -38,65 +39,36 @@ class FeedCell: BaseCell {
     override func setupViews() {
         
         super.setupViews()
-                
+        
         addSubview(collectionView)
         
-        getVideosFromPlaylist(playlist: ConfigConstants.latestPL)
+        fetchVideos()
         
         addConstraintsWithFormat(format: "H:|[v0]|", views: collectionView)
         
         addConstraintsWithFormat(format: "V:|[v0]|", views: collectionView)
         
         collectionView.register(VideoCellCollectionViewCell.self, forCellWithReuseIdentifier: cellid)
-                
+        
     }
     
-    func usePlaylist(withVideos videos: [BCOVVideo], withChannels channels: [String : Channel], withDates dates: [String : String]){
-        
-       // videosToUse = []
-        
-        for video in videos {
+    func fetchVideos() {
+        APIService.sharedInstance.fetchVideosForPlaylist(withId: ConfigConstants.latestPL, completion: { (videos: [Video] )  in
             
-            let myBCVideo : Video = {
-                
-                let v = Video()
-                
-                v.title = video.properties[kBCOVVideoPropertyKeyName] as? String
-                
-                v.thumbnailImageName = video.properties[kBCOVVideoPropertyKeyPoster] as? String
-                
-                v.bcovId = video.properties[kBCOVVideoPropertyKeyId] as? String
-                
-                v.channel = channels[v.bcovId!]
-                
-                v.uploadDate = dates[v.bcovId!]
-                
-                v.delegate = self
-                
-                return v
-                
-            }()
-            
-            videosToUse.append(myBCVideo)
-            
-        }
-        
-        DispatchQueue.main.async {
+            self.videos = videos
             
             self.collectionView.reloadData()
             
-        }
-        
-        
+        })
     }
-
+    
 }
 
 extension FeedCell: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
-        return videosToUse.count
+        return videos.count
         
     }
     
@@ -105,8 +77,10 @@ extension FeedCell: UICollectionViewDataSource {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cellid", for: indexPath) as! VideoCellCollectionViewCell
         
-        cell.video = videosToUse[indexPath.item]
+        videos[indexPath.item].delegate = self
         
+        cell.video = videos[indexPath.item]
+                
         return cell
         
     }
@@ -142,8 +116,8 @@ extension FeedCell: UICollectionViewDelegateFlowLayout {
 extension FeedCell: ReloadDelegate {
     
     @objc func didUpdateAnalytics(forVideo video: Video) {
-                  
-        let indexOfItem = videosToUse.firstIndex(of: video)
+        
+        let indexOfItem = videos.firstIndex(of: video)
         
         guard let itemToFind = indexOfItem else {
             
@@ -152,16 +126,16 @@ extension FeedCell: ReloadDelegate {
             return
             
         }
-                      
-           let item: IndexPath = IndexPath(item: itemToFind, section: 0)
-           
-           DispatchQueue.main.async {
-               
-               self.collectionView.reloadItems(at: [item])
-               
-           }
-
-       
-       }
+        
+        let item: IndexPath = IndexPath(item: itemToFind, section: 0)
+        
+        DispatchQueue.main.async {
+            
+            self.collectionView.reloadItems(at: [item])
+            
+        }
+        
+        
+    }
     
 }

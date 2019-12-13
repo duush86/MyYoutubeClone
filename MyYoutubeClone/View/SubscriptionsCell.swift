@@ -1,5 +1,5 @@
 //
-//  TrendingCell.swift
+//  SubscriptionsCell.swift
 //  MyYoutubeClone
 //
 //  Created by Antonio Orozco on 12/12/19.
@@ -9,8 +9,8 @@
 import UIKit
 import BrightcovePlayerSDK
 
-class TrendingCell: FeedCell {
-        
+class SubscriptionsCell: FeedCell {
+    
     override func setupViews() {
         
         super.setupViews()
@@ -18,9 +18,10 @@ class TrendingCell: FeedCell {
         fetchVideos()
         
     }
+    
     override func fetchVideos() {
-      
-        APIService.sharedInstance.fetchVideosForPlaylist(withId: ConfigConstants.trendingPL, completion: { (videos: [Video] )  in
+        
+        APIService.sharedInstance.fetchVideosForPlaylist(withId: ConfigConstants.subscriptionPL, completion: { (videos: [Video] )  in
             
             self.videos = videos
             
@@ -30,9 +31,4 @@ class TrendingCell: FeedCell {
     }
     
     
-    
 }
-
-
-
-
