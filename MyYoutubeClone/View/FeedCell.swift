@@ -86,7 +86,14 @@ extension FeedCell: UICollectionViewDataSource {
     }
     
     
-    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        let videoL = VideoLauncher()
+        
+        videoL.showVideoPlayer(forVideo: videos[indexPath.row])
+        
+    }
+        
     
 }
 

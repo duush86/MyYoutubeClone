@@ -1,15 +1,14 @@
 //
 //  BaseVideoViewController.swift
-//  MyYoutubeClone
+//  OfflinePlayer
 //
-//  Created by Antonio Orozco on 12/2/19.
-//  Copyright © 2019 Antonio Orozco. All rights reserved.
+//  Copyright © 2019 Brightcove, Inc. All rights reserved.
 //
 
 import UIKit
 import BrightcovePlayerSDK
 
-class BaseVideoViewController: UICollectionViewController,  BCOVPlaybackControllerDelegate {
+class BaseVideoViewController: UIViewController,  BCOVPlaybackControllerDelegate {
     
     private lazy var authProxy: BCOVFPSBrightcoveAuthProxy? = {
         // Publisher/application IDs not required for Dynamic Delivery
@@ -35,12 +34,12 @@ class BaseVideoViewController: UICollectionViewController,  BCOVPlaybackControll
     }
     
     func createNewPlaybackController(onView videoContainerView: UIView) -> BCOVPlaybackController? {
-        let playerView: BCOVPUIPlayerView? = {
+         let playerView: BCOVPUIPlayerView? = {
             
             let options = BCOVPUIPlayerViewOptions()
             options.presentingViewController = self
             
-            var delegate: BCOVPUIPlayerViewDelegate?
+            //var delegate: BCOVPUIPlayerViewDelegate?
             
             // Create PlayerUI views with normal VOD controls.
             let controlView = BCOVPUIBasicControlView.withVODLayout()
@@ -73,7 +72,7 @@ class BaseVideoViewController: UICollectionViewController,  BCOVPlaybackControll
         let options = BCOVBasicSessionProviderOptions()
         options.sourceSelectionPolicy = BCOVBasicSourceSelectionPolicy.sourceSelectionHLS(withScheme: kBCOVSourceURLSchemeHTTPS)
         //guard let basicSessionProvider = sdkManager?.createBasicSessionProvider(with: options), let authProxy = self.authProxy else {
-        //     return
+       //     return
         //}
         //let fairPlaySessionProvider = sdkManager?.createFairPlaySessionProvider(withApplicationCertificate: nil, authorizationProxy: authProxy, upstreamSessionProvider: basicSessionProvider)
         
@@ -94,7 +93,7 @@ class BaseVideoViewController: UICollectionViewController,  BCOVPlaybackControll
         
         return playbackController!
     }
-    
+
 }
 
 extension BaseVideoViewController: BCOVPUIPlayerViewDelegate {
@@ -131,8 +130,9 @@ extension BaseVideoViewController: BCOVPUIPlayerViewDelegate {
         default:
             print("Do Nothing")
         }
-        
-        
+
+
     }
     
 }
+

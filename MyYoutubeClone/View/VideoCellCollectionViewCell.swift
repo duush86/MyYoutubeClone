@@ -187,9 +187,7 @@ class VideoCellCollectionViewCell: BaseCell {
         let label = UILabel()
                 
         label.translatesAutoresizingMaskIntoConstraints = false
-        
-       // label.text = "The Killers - Mr. Brightside"
-        
+                
         label.numberOfLines = 0
         
         return label
@@ -240,8 +238,6 @@ class VideoCellCollectionViewCell: BaseCell {
         addSubview(userProfileImageView)
         addSubview(titleLabel)
         addSubview(subtitleTextView)
-        //thumbnailImageView.addSubview(moreInfoImage)
-
         
         
         //Horizontal constraints

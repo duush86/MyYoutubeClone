@@ -19,7 +19,7 @@ struct ConfigConstants {
     static let subscriptionPL = "6054209724001"
 }
 
-class HomeController: BaseVideoViewController {
+class HomeController: UICollectionViewController {
     
     let titles = ["Home", "Trending", "Suscriptions","Account"]
 
@@ -56,9 +56,7 @@ class HomeController: BaseVideoViewController {
     }
     
     func setupCollectionView()  {
-        
-        //collectionView.register(VideoCellCollectionViewCell.self, forCellWithReuseIdentifier: "cellid")
-        
+                
         if let flowLayout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
             
             flowLayout.scrollDirection = .horizontal
@@ -170,9 +168,6 @@ class HomeController: BaseVideoViewController {
         
         navigationController?.navigationBar.tintColor = UIColor.white
         
-        
-               
-        
     }
     
     @objc func handleDismiss(){
@@ -184,7 +179,6 @@ class HomeController: BaseVideoViewController {
     @objc func handleSearch() {
         
         print(123)
-        //scrollToManuIndex(menuIndex: 2)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -211,6 +205,7 @@ class HomeController: BaseVideoViewController {
         }
         
     }
+    
 
 }
 
