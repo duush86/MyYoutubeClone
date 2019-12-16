@@ -5,10 +5,17 @@
 //  Created by Antonio Orozco on 12/5/19.
 //  Copyright © 2019 Antonio Orozco. All rights reserved.
 //
-
+/*
+ 
+ Class inherinting from BaseCell used to setup the Settings menu.
+ 
+ */
 import UIKit
 
 class SettingCell: BaseCell {
+    
+    //MARK: - Setting the UI Elements for the Setting Cells.
+    //This relates with the SettingsLauncher Controller. 
     
     override var isHighlighted: Bool {
         

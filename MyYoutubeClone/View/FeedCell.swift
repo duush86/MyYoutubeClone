@@ -17,7 +17,6 @@ class FeedCell: BaseCell {
     
     var datesDictionary: [String: String]?
     
-    
     lazy var collectionView: UICollectionView = {
         
         let layout = UICollectionViewFlowLayout()
@@ -53,6 +52,7 @@ class FeedCell: BaseCell {
     }
     
     func fetchVideos() {
+        
         APIService.sharedInstance.fetchVideosForPlaylist(withId: ConfigConstants.latestPL, completion: { (videos: [Video] )  in
             
             self.videos = videos

@@ -8,7 +8,11 @@
 
 import UIKit
 import BrightcovePlayerSDK
-
+/*
+ 
+ Generic UICollectionViewCell
+ 
+ */
 class BaseCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
@@ -24,11 +28,17 @@ class BaseCell: UICollectionViewCell {
     }
     
     required init?(coder: NSCoder) {
-       
+        
         fatalError("init(coder:) has not been implemented")
-
+        
     }
 }
+
+/*
+ 
+ VideoCellCollectionViewCell class that inherits from BaseCell. This is the class used for the cell layout. Any changes on the cell look and geel needs to be done here.
+ 
+ */
 
 class VideoCellCollectionViewCell: BaseCell {
     
@@ -36,10 +46,12 @@ class VideoCellCollectionViewCell: BaseCell {
     override init(frame: CGRect) {
         
         super.init(frame: frame)
-                
+        
         setupViews()
     }
-        
+    
+    // Method to populate the content cell's when a new video object is created.
+    
     var video: Video? {
         
         didSet {
@@ -47,12 +59,12 @@ class VideoCellCollectionViewCell: BaseCell {
             fetchAnalyticsData()
             
             fetchImage()
-                        
+            
             thumbnailImageView.contentMode = .scaleToFill
             
-          //guard let channelName = video?.channel?.name, let creation_date = video?.uploadDate else {
-          guard let channelName = video?.channel?.name, let creation_date = video?.uploadDate, let nov = video?.numberOfViews else {
-
+            //guard let channelName = video?.channel?.name, let creation_date = video?.uploadDate else {
+            guard let channelName = video?.channel?.name, let creation_date = video?.uploadDate, let nov = video?.numberOfViews else {
+                
                 print("Cannot get details on videos or channel")
                 
                 let subtitleText = ""
@@ -62,7 +74,7 @@ class VideoCellCollectionViewCell: BaseCell {
                 userProfileImageView.image = nil
                 
                 titleLabel.text = ""
-            
+                
                 return
             }
             
@@ -71,32 +83,33 @@ class VideoCellCollectionViewCell: BaseCell {
             let numberFormatter = NumberFormatter()
             
             numberFormatter.numberStyle = .decimal
-
-           
+            
+            
             
             let subtitleText = "\(channelName) - \(numberFormatter.string(from: nov)!) views - Since \(createDateString(from: creation_date))"
             //let subtitleText = "\(channelName) - X views - Since \(createDateString(from: creation_date))"
-
+            
             userProfileImageView.image = UIImage(named: channelName)
             
-            
             subtitleTextView.text = subtitleText
-    
-    
+            
+            
             //measure title text
             guard let title = video?.title else {
-            
+                
                 print("Unable to get title")
                 
                 return
-            
+                
             }
+            
+            // This piece of code is to have one or two lines of code on the video's title. Currently is throwing layour warnings so I comment it out.
             
             let estimatedRect = NSString(string: title).boundingRect(with: CGSize(width: frame.width - 16 - 44 - 8 - 16, height: 1000), options: NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin), attributes: [kCTFontAttributeName as NSAttributedString.Key: UIFont.systemFont(ofSize: 14)], context: nil)
             
             if estimatedRect.size.height > 20 {
                 
-               // titleLabelHeightConstraint?.constant = 44
+                // titleLabelHeightConstraint?.constant = 44
                 
             } else {
                 
@@ -111,72 +124,78 @@ class VideoCellCollectionViewCell: BaseCell {
         
     }
     
+    
     func fetchImage(){
         
         if let thumbnailImageURL = video?.thumbnailImageName {
             
             thumbnailImageView.cacheThumbnail(forThumbnailURL: thumbnailImageURL as NSString)
-        
+            
         }
         
     }
     
+    /*
+     Function to gather the analytics. It uses an internal function on the video object.
+     */
     
     func fetchAnalyticsData(){
-            
+        
         video?.fetchAnalytics()
         
     }
-
+    
     
     func createDateString(from dateString: String) -> String {
-       
-         let dateFormatter = DateFormatter()
-         
-         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ"
-         
-         let enUSPosixLocale = Locale(identifier: "en_US_POSIX")
-         
-         dateFormatter.locale = enUSPosixLocale
-
-         dateFormatter.calendar = Calendar(identifier: .gregorian)
         
-         let date = dateFormatter.date(from: dateString)
+        let dateFormatter = DateFormatter()
+        
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ"
+        
+        let enUSPosixLocale = Locale(identifier: "en_US_POSIX")
+        
+        dateFormatter.locale = enUSPosixLocale
+        
+        dateFormatter.calendar = Calendar(identifier: .gregorian)
+        
+        let date = dateFormatter.date(from: dateString)
         
         return date!.timeAgoSinceDate()
         
     }
+    
+    //MARK: - UI Element definitions
     
     let thumbnailImageView: CustomImageView = {
         
         let imageView = CustomImageView()
         
         imageView.clipsToBounds = true
-                
+        
         return imageView
         
     }()
     
     let separatorView: UIView = {
-    
+        
         let view = UIView()
         
         view.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1.0)
         
         return view
-    
+        
     }()
     
     let userProfileImageView : UIImageView = {
         
         let imageView = UIImageView()
-                       
+        
         //imageView.image = UIImage(named: "k_icon")
         
         imageView.layer.cornerRadius = 22
         
         imageView.layer.masksToBounds = true
-                       
+        
         return imageView
         
         
@@ -185,9 +204,9 @@ class VideoCellCollectionViewCell: BaseCell {
     let titleLabel: UILabel = {
         
         let label = UILabel()
-                
+        
         label.translatesAutoresizingMaskIntoConstraints = false
-                
+        
         label.numberOfLines = 0
         
         return label
@@ -197,7 +216,7 @@ class VideoCellCollectionViewCell: BaseCell {
     let subtitleTextView: UITextView = {
         
         let textView = UITextView()
-                
+        
         textView.text = ""
         
         textView.isEditable = false
@@ -205,7 +224,7 @@ class VideoCellCollectionViewCell: BaseCell {
         textView.isSelectable = false
         
         textView.textContainerInset = UIEdgeInsets(top: 0, left: -4, bottom: 0, right: 0)
-
+        
         textView.translatesAutoresizingMaskIntoConstraints = false
         
         return textView
@@ -213,9 +232,9 @@ class VideoCellCollectionViewCell: BaseCell {
     }()
     
     let moreInfoImage: UIImageView = {
-       
+        
         let imageView = UIImageView()
-                
+        
         imageView.image = UIImage(systemName: "info.circle")
         
         return imageView
@@ -223,33 +242,38 @@ class VideoCellCollectionViewCell: BaseCell {
     }()
     
     required init?(coder: NSCoder) {
-     
+        
         fatalError("init(coder:) has not been implemented")
-    
+        
     }
     
     var titleLabelHeightConstraint: NSLayoutConstraint?
     
     
+    
     override func setupViews()  {
         
         addSubview(thumbnailImageView)
+        
         addSubview(separatorView)
+        
         addSubview(userProfileImageView)
+        
         addSubview(titleLabel)
+        
         addSubview(subtitleTextView)
         
         
         //Horizontal constraints
         addConstraintsWithFormat(format: "H:|-16-[v0]-16-|", views: thumbnailImageView)
-       
+        
         //addConstraintsWithFormat(format: "H:[v0(20)]-8-|", views: moreInfoImage)
         
         addConstraintsWithFormat(format: "H:|-16-[v0(44)]", views: userProfileImageView)
         
         addConstraintsWithFormat(format: "H:|[v0]|", views: separatorView)
-
-       
+        
+        
         //Vertical constraints
         addConstraintsWithFormat(format: "V:|-16-[v0]-8-[v1(44)]-36-[v2(1)]|", views: thumbnailImageView,userProfileImageView, separatorView)
         
@@ -266,7 +290,7 @@ class VideoCellCollectionViewCell: BaseCell {
         
         //height constraint
         titleLabelHeightConstraint = NSLayoutConstraint(item: titleLabel, attribute: .height, relatedBy: .equal, toItem: self, attribute: .height, multiplier: 0, constant: 44)
-       
+        
         addConstraint(titleLabelHeightConstraint!)
         
         //SUBTITLE

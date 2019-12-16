@@ -12,11 +12,13 @@ import BrightcovePlayerSDK
 
 
 struct ConfigConstants {
+    
     static let AccountID = "6030890615001"
     static let PolicyKey = "BCpkADawqM32nL1Ic9gyo3bITy-1QWVkCxdmpEw9LLw3BrW7TwxPPCaWEq5OoIRzx9E3ydeeS2uir3OOi2ziy2Dh5NjlAqavWfSjyFXkTtHB69KQkyc0-FAXel3bqWzTFdMuFXy0RjhXsecd"
     static let latestPL = "1651847405034787885"
     static let trendingPL = "1651847596733298880"
     static let subscriptionPL = "6054209724001"
+
 }
 
 class HomeController: UICollectionViewController {
@@ -244,9 +246,7 @@ extension HomeController: UICollectionViewDelegateFlowLayout {
             
         }
         
-        
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: id, for: indexPath)
-
         
         return cell
         

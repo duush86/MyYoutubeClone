@@ -5,6 +5,10 @@
 //  Created by Antonio Orozco on 12/2/19.
 //  Copyright © 2019 Antonio Orozco. All rights reserved.
 //
+//  Video object class..Here's where we store the video objects from Brightcove. It has a Delegate called "ReloadDelegate" with a protocol method called didUpdateAnalytics.
+//  The protocol was created to be called when the Analytics are ready as sometimes it takes some time to retrieve the date from the API proxy. Once the data is ready, it calls the
+//  reload row function to refresh the UI.
+//
 
 import UIKit
 import BrightcovePlayerSDK

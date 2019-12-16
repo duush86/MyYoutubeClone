@@ -6,9 +6,17 @@
 //  Copyright © 2019 Antonio Orozco. All rights reserved.
 //
 
+/*
+ 
+ ManuBar class, defines the UI elements for a menbar. It related with the HomeController as its where it lives on the App cycle.
+ 
+ */
+
 import UIKit
 
 class MenuBar: UIView {
+    
+    //The menu is built out with the following collectionView.
     
     lazy var collectionView: UICollectionView = {
         
@@ -54,6 +62,10 @@ class MenuBar: UIView {
     
     var horizontalBarLeftAnchoConstraint: NSLayoutConstraint?
     
+    /*
+     Function to setuo the bar that highlights the menu select item
+     */
+    
     func setupHorizontalBar(){
         
         let horizontalBarView = UIView()
@@ -63,35 +75,37 @@ class MenuBar: UIView {
         horizontalBarView.translatesAutoresizingMaskIntoConstraints = false
         
         addSubview(horizontalBarView)
-        
+
+        //The bar left anchor is equal to the self host left anchor
         horizontalBarLeftAnchoConstraint = horizontalBarView.leftAnchor.constraint(equalTo: self.leftAnchor)
         
         horizontalBarLeftAnchoConstraint!.isActive = true
         
+        //The bar bottom anchor is equal to the self host left anchor
         let horizontalBarBottomAnchoConstraint = horizontalBarView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
         
         horizontalBarBottomAnchoConstraint.isActive = true
         
+         //The bar with anchor is 1/4 of the self host width anchor
         let horizontalBarWidthAnchoConstraint = horizontalBarView.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 1/4)
         
         horizontalBarWidthAnchoConstraint.isActive = true
         
+        //The bar height anchor
         let horizontalBarHeightAnchoConstraint = horizontalBarView.heightAnchor.constraint(equalToConstant: 3)
         
         horizontalBarHeightAnchoConstraint.isActive = true
         
     }
     
-   
-    
     required init?(coder: NSCoder) {
         
         fatalError("init(coder: has not been implemented")
         
-        
     }
 }
 
+//MARK: - Delegate methods to populate the Menu Bar UICollection View items.
 extension  MenuBar: UICollectionViewDataSource{
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
@@ -118,6 +132,7 @@ extension MenuBar: UICollectionViewDelegate {
     
 }
 
+//MARK: - Delegate methods to customize the UICollectionView style
 extension MenuBar: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -132,6 +147,7 @@ extension MenuBar: UICollectionViewDelegateFlowLayout {
     
     }
     
+    //This method is called when the user tabs on one of the menu's elements. It calls the homeController object to update the UI accordingly.
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
                    
         let x = CGFloat(indexPath.item) * self.frame.width / 4
@@ -144,6 +160,7 @@ extension MenuBar: UICollectionViewDelegateFlowLayout {
     
     
 }
+//MARK: - Defines de Menu Cell elements, it inherits from BaseCell as well.
 
 class MenuCell: BaseCell {
     

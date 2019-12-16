@@ -18,6 +18,7 @@ class TrendingCell: FeedCell {
         fetchVideos()
         
     }
+    
     override func fetchVideos() {
       
         APIService.sharedInstance.fetchVideosForPlaylist(withId: ConfigConstants.trendingPL, completion: { (videos: [Video] )  in
@@ -28,8 +29,6 @@ class TrendingCell: FeedCell {
             
         })
     }
-    
-    
     
 }
 
