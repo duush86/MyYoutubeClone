@@ -10,16 +10,10 @@ import UIKit
 import BrightcovePlayerSDK
 
 class VideoLauncher:  UIView, BCOVPlaybackControllerDelegate {
-    
-    //  var homeController: HomeController?
-    
+        
     let labelVideoTitle: UILabel = {
              
               let lvt = UILabel()
-              
-              //lvt.backgroundColor = .black
-              
-              //lvt.text = video.title
               
               lvt.translatesAutoresizingMaskIntoConstraints = false
               
@@ -29,10 +23,6 @@ class VideoLauncher:  UIView, BCOVPlaybackControllerDelegate {
     let labelVideoDescription: UITextView = {
         
         let lvd = UITextView()
-        
-        //lvd.backgroundColor = .black
-        
-        //lvd.text = createDateString(from: video.uploadDate!)
         
         lvd.isEditable = false
         
@@ -49,10 +39,6 @@ class VideoLauncher:  UIView, BCOVPlaybackControllerDelegate {
         
         let ltv = UILabel()
         
-        //ltv.backgroundColor = .black
-        
-       // ltv.text = "Total Number of views: \(numberFormatter.string(from: video.numberOfViews!)!)"
-        
         ltv.translatesAutoresizingMaskIntoConstraints = false
                     
         return ltv
@@ -60,7 +46,6 @@ class VideoLauncher:  UIView, BCOVPlaybackControllerDelegate {
     
     let numberFormatter = NumberFormatter()
                      
-//    numberFormatter.numberStyle = .decimal
     
     func showVideoPlayer(forVideo video: Video){
         
